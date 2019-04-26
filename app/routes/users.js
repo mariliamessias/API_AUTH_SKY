@@ -27,9 +27,8 @@ router.route('/user/id/:id')
                                 if(user){
                                     res.json({
                                         id: user.id,
-                                        data_criacao: user.createAt,
-                                        data_atualizacao: user.updateAt,
-                                        ultimo_login: user.loginDate,
+                                        nome: user.nome,
+                                        email: user.email,
                                         token: user.token,
                                     });
                                 }
