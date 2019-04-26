@@ -25,7 +25,13 @@ router.route('/user/id/:id')
                             }
                             else{
                                 if(user){
-                                    res.json(user);
+                                    res.json({
+                                        id: user.id,
+                                        data_criacao: user.createAt,
+                                        data_atualizacao: user.updateAt,
+                                        ultimo_login: user.loginDate,
+                                        token: token,
+                                    });
                                 }
                                 else{
                                     res.status(404).json({ mensagem:'usuario não localizado' });
