@@ -1,0 +1,34 @@
+{
+  "name": "sky_desafio",
+  "version": "1.0.0",
+  "description": "API RESTFul de criação de sign up/sign in",
+  "main": "index.js",
+  "directories": {
+    "test": "mocha"
+  },
+  "scripts": {
+    "test": "mocha --exit ./test/authentication.spec.js",
+    "lint": "eslint ./ --fix",
+    "coverage": "nyc mocha --exit ./test/authentication.spec.js"
+  },
+  "author": "Marilia Messias",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.1",
+    "karma": "^4.1.0",
+    "mocha": "^6.1.4",
+    "mongoose": "^5.5.3",
+    "node": "^10.15.3",
+    "node-restful": "^0.2.6",
+    "supertest": "^4.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^2.0.1"
+  }
+}
