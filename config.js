@@ -1,4 +1,6 @@
+'use strict';
+
 module.exports = {
-    'secret': '1jw4l50poi@',
-    'expiresIn': 1500
-}
+  secret: '1jw4l50poi@',
+  expiresIn: 1500,
+};

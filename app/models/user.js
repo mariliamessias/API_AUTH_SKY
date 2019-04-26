@@ -1,20 +1,22 @@
-var mongoose = require('mongoose');
-var Schema =  mongoose.Schema;
+'use strict';
 
-var userSchema = new Schema({
+const mongoose = require('mongoose');
 
-    nome: String,
-    email: String,
-    senha: String,
-    createAt : { type: Date, default: Date.now },
-    updateAt : { type: Date, default: Date.now },
-    loginDate: { type: Date, default: Date.now },
-    token: String,
-    telefones: [{
-        numero: String,
-        ddd: Number
-        }
-    ]     
+const { Schema } = mongoose;
+const userSchema = new Schema({
+
+  nome: String,
+  email: String,
+  senha: String,
+  createAt: { type: Date, default: Date.now },
+  updateAt: { type: Date, default: Date.now },
+  loginDate: { type: Date, default: Date.now },
+  token: String,
+  telefones: [{
+    numero: String,
+    ddd: Number,
+  },
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);

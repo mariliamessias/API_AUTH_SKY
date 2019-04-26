@@ -1,32 +1,35 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var authentication = require('./app/security/authentication');
-var verifyToken = require('./app/security/verifyToken');
-var users = require('./app/routes/users');
- 
-app.use(bodyParser.urlencoded({extended: true}));
+'use strict';
+
+const express = require('express');
+
+const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const authentication = require('./app/security/authentication');
+const verifyToken = require('./app/security/verifyToken');
+const users = require('./app/routes/users');
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = Number(process.env.PORT || 3000);
-var router = express.Router();
+const port = Number(process.env.PORT || 3000);
+const router = express.Router();
 
-router.use(verifyToken, function(req, res, next){
-    next();
+router.use(verifyToken, (req, res, next) => {
+  next();
 });
 
-router.get('/', function(req, res){
-    res.json({mensagem: 'Conectado'});
+router.get('/', (req, res) => {
+  res.json({ mensagem: 'Conectado' });
 });
 
 router.use(users);
 
 router.use('/auth/', authentication);
-    
+
 app.use('/api', router);
 
-mongoose.connect('mongodb://user:user123@ds121543.mlab.com:21543/skydesafio',{ useNewUrlParser: true })
+mongoose.connect('mongodb://user:user123@ds121543.mlab.com:21543/skydesafio', { useNewUrlParser: true });
 
 app.listen(port);
 

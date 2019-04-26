@@ -7,10 +7,11 @@
     "test": "mocha"
   },
   "scripts": {
-    "test": " nyc --reporter=text mocha --timeout 10000 --exit ./test/",
-    "lint": "eslint ./ --fix",
+    "test": "nyc --reporter=text mocha --timeout 10000 --exit ./test/authentication.spec.js",
     "start": "node server.js",
-    "coverage": "nyc mocha --exit ./test/"
+    "coverage": "nyc mocha --exit ./test/authentication.spec.js",
+    "lint": "eslint *.js .",
+    "lint:fix": "eslint --fix *.js ."
   },
   "author": "Marilia Messias",
   "license": "ISC",
@@ -21,17 +22,17 @@
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "karma": "^4.1.0",
-    "mocha": "^6.1.4",
     "mongoose": "^5.5.3",
     "node": "^10.15.3",
     "node-restful": "^0.2.6",
-    "nyc": "^14.0.0",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^2.0.1"
+    "karma-jasmine": "^2.0.1",
+    "mocha": "^6.1.4",
+    "nyc": "^14.0.0"
   }
 }
