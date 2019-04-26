@@ -9,6 +9,7 @@
   "scripts": {
     "test": "mocha --exit ./test/authentication.spec.js",
     "lint": "eslint ./ --fix",
+    "start": "node server.js",
     "coverage": "nyc mocha --exit ./test/authentication.spec.js"
   },
   "author": "Marilia Messias",
