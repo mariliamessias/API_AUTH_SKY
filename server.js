@@ -9,7 +9,7 @@ var users = require('./app/routes/users');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var port = 4000;
+var port = Number(process.env.PORT || 3000);
 var router = express.Router();
 
 router.use(verifyToken, function(req, res, next){
