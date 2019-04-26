@@ -30,7 +30,7 @@ router.route('/user/id/:id')
                                         data_criacao: user.createAt,
                                         data_atualizacao: user.updateAt,
                                         ultimo_login: user.loginDate,
-                                        token: token,
+                                        token: user.token,
                                     });
                                 }
                                 else{
