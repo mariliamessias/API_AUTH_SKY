@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken');
 var config = require('../../config');
+var User = require ('../models/user');
  
 var naoValidarToken = function(req){
   return req.originalUrl === '/api/auth/sign-in' || req.originalUrl === '/api/auth/sign-up';
@@ -17,8 +18,13 @@ function verifyToken(req, res, next) {
   jwt.verify(token, config.secret, function(err, decoded) {
     if (err)
     return res.status(403).send({mensagem: 'Não autorizado' });
-    req.userId = decoded.id;
-    next();
+
+    User.findOne({ _id: decoded.id }, function (err, user) {
+      if (user && user.token === token){
+        req.userId = decoded.id;
+        next();
+      } else return res.status(403).send({mensagem: 'Não autorizado' });
+    });  
   });
 }
 module.exports = verifyToken;

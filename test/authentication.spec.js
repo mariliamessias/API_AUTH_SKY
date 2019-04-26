@@ -13,8 +13,8 @@ describe('Authentication API', () =>{
             request(app)
             .post('/api/auth/sign-in')
             .send({
-                "email": "1234@email.com",
-                "senha": "teste",
+                "email":"teste@email.com",
+	            "senha":"teste",
             })
             .expect(200)
             .end((err, res) => {
@@ -179,8 +179,8 @@ describe('Authentication API', () =>{
             request(app)
             .post('/api/auth/sign-in')
             .send({
-                "email": "1234@email.com",
-                "senha": "teste",
+                "email":"teste@email.com",
+	            "senha":"teste",
             })
             .expect(200)
             .end((err, res) => {
@@ -189,7 +189,7 @@ describe('Authentication API', () =>{
                     throw err;
                 } 
                 request(app)
-                .get('/api/user/id/5cc26836e78c2f0004cbde5b')
+                .get('/api/user/id/5cc33a99dd16c15b8866703b')
                 .set('authorization', `Bearer ${res.body.token}`)
                 .expect(200)
                 .end((err, res) => {
@@ -259,11 +259,11 @@ describe('Authentication API', () =>{
             })
         })  
 
-        it('should return a user with token of removed user' , done =>{
+        it('should return error by token of removed user' , done =>{
               request(app)
                 .get('/api/user/id/5cc26836e78c2f0004cbde5b')
                 .set('authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYzI1ZGM2MTI3NDU0NmNlNDM2NTRkZiIsImlhdCI6MTU1NjI4NzYyNywiZXhwIjoxNTU2MzMwODI3fQ.OxqMwman0jRYZEN5rAqL7kwyqX6rj0LkqHkv3WvFEh4`)
-                .expect(404)
+                .expect(403)
                 .end((err, res) => {
                     if(err) {
                         done(err);

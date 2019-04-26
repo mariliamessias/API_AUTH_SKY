@@ -13,21 +13,22 @@ router.post('/sign-up', function(req, res){
     if (err) return res.status(500).send({mensagem:'Ocorreu um erro inesperado no servidor.'});
     if (!user) {
       var psw = bcrypt.hashSync(req.body.senha,10);
+
+      var token = jwt.sign({id: User._id},config.secret, {
+        expiresIn: config.expiresIn
+       });
+
       var newUser = new User({
         nome: req.body.nome,
         email : req.body.email,
         senha : psw,
         telefones : req.body.telefones,
+        token: token,
       });
 
       newUser.save(function(err){
-        if(err) return res.status(500).send({mensagem:'Erro ao cadastrar usuário'});
-        
+        if(err) return res.status(500).send({mensagem:'Erro ao cadastrar usuário'}); 
       })
-      var token = jwt.sign({id: User._id},config.secret, {
-        expiresIn: config.expiresIn
-       });
-
       return res.status(200).send({
           id: newUser.id,
           data_criacao: newUser.createAt,
@@ -39,8 +40,6 @@ router.post('/sign-up', function(req, res){
     res.status(400).send({mensagem:'E-mail já existente'});
     });
 })
-
-
 
 router.post('/sign-in', function(req, res) {
   User.findOne({ email: req.body.email }, function (err, user) {
@@ -57,6 +56,7 @@ router.post('/sign-in', function(req, res) {
 
     User.update({ _id: user.id }, { $set: { 
             loginDate: new Date(),
+            token: token,
         } },function(error){
         if(error){                
             res.status(500).send({mensagem:'Erro ao tentar atualizar o usuario!' + error});
