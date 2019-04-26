@@ -7,10 +7,10 @@
     "test": "mocha"
   },
   "scripts": {
-    "test": "mocha --exit ./test/authentication.spec.js",
+    "test": " nyc --reporter=text mocha --timeout 10000 --exit ./test/",
     "lint": "eslint ./ --fix",
     "start": "node server.js",
-    "coverage": "nyc mocha --exit ./test/authentication.spec.js"
+    "coverage": "nyc mocha --exit ./test/"
   },
   "author": "Marilia Messias",
   "license": "ISC",
@@ -18,12 +18,14 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "karma": "^4.1.0",
     "mocha": "^6.1.4",
     "mongoose": "^5.5.3",
     "node": "^10.15.3",
     "node-restful": "^0.2.6",
+    "nyc": "^14.0.0",
     "supertest": "^4.0.2"
   },
   "devDependencies": {

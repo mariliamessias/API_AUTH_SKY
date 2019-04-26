@@ -1,35 +1,277 @@
-// const app = require('../server');
-// const request = require('supertest');
+const app = require('../server');
+const request = require('supertest');
+const mocha = require('mocha');
+const chai = require('chai');
+var faker = require('faker');
+const expect = chai.expect;
+const should = chai.should();
 
-// describe('Authentication API', () =>{
+describe('Authentication API', () =>{
 
-//     describe('POST /API/auth', () =>{
-//         it('should return a object of a create user' , done =>{
-//             request(app)
-//             .post('/api/auth/sign-up')
-//             .send({
-//                     "nome": "teste",
-//                     "email": "1234@email.com",
-//                     "senha": "teste",
-//                     "telefones": [
-//                        {
-//                            "numero": "123",
-//                            "ddd": "12"
-//                        }
-//                     ]
-//             })
-//             .expect(200)
-//             .end((err, res) => {
-//                 console.log(res.body);
-//                 if(err) {
-//                     done(err);
-//                     throw err;
-//                 } 
-//                 res.body.should.have.property('nome');
-//                 done();
-//             })
-//         })
+    describe('GET /API', ()=>{
+        it('should return a connect ok' , done =>{
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                "email": "1234@email.com",
+                "senha": "teste",
+            })
+            .expect(200)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                } 
+                request(app)
+                .get('/api/')
+                .set('authorization', `Bearer ${res.body.token}`)
+                .expect(200)
+                .end((err, res) => {
+                    if(err) {
+                        done(err);
+                        throw err;
+                    }  
+                        res.body.should.to.be.an('object').that.has.property('mensagem');
+                    done();
+                })
+            })
+        })
+      
+    });
 
-//     });
-    
-// }); 
+    describe('POST /API/auth/sign-in', () =>{
+        it('should return a object of a sign-in user' , done =>{
+            
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                    "email": "teste@email.com",
+                    "senha": "teste",
+            })
+            .expect(200)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('id');
+                done();
+            })
+        })
+        
+        it('should return error 404 with wrong email' , done =>{
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                    "email": "123a4@email.com",
+                    "senha": "teste",
+            })
+            .expect(404)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('mensagem');
+                done();
+            })
+        })
+        it('should return error 401 with wrong password' , done =>{
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                    "email": "1234@email.com",
+                    "senha": "tesate",
+            })
+            .expect(401)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('mensagem');
+                done();
+            })
+        })
+    });
+
+    describe('POST /API/auth/sign-up', () =>{
+        it('should return a error 400 when create a new user' , done =>{
+            request(app)
+            .post('/api/auth/sign-up')
+            .send({
+                    "nome": "teste",
+                    "email": "1234@email.com",
+                    "senha": "teste",
+                    "telefones": [{
+                        "numero": "123",
+                        "ddd": "11"
+                    }]
+            })
+            .expect(400)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('mensagem');
+                done();
+            })
+        }) 
+        it('should return a create a new user' , done =>{
+            const nome = faker.name.firstName();
+            const email = faker.internet.email();
+            request(app)
+            .post('/api/auth/sign-up')
+            .send({
+                "nome": nome,
+                "email": email,
+                "senha": "teste",
+                "telefones": [{
+                    "numero": "123",
+                    "ddd": "11"
+                }]
+            })
+            .expect(200)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('id');
+                done();
+            })
+        })        
+    });
+
+    describe('GET /API/user/', () =>{
+        
+        it('should return a user not authorized' , done =>{
+            request(app)
+            .get('/api/user/id/3')
+            .expect(403)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('mensagem');
+                done();
+            })
+        })    
+        
+        it('should return a user with wrong token' , done =>{
+            request(app)
+            .get('/api/user/id/3')
+            .set('authorization', 'testToken')
+            .expect(403)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                }  
+                    res.body.should.to.be.an('object').that.has.property('mensagem');
+                done();
+            })
+        })  
+
+        it('should return a user with correct token' , done =>{
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                "email": "1234@email.com",
+                "senha": "teste",
+            })
+            .expect(200)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                } 
+                request(app)
+                .get('/api/user/id/5cc26836e78c2f0004cbde5b')
+                .set('authorization', `Bearer ${res.body.token}`)
+                .expect(200)
+                .end((err, res) => {
+                    if(err) {
+                        done(err);
+                        throw err;
+                    }  
+                        res.body.should.to.be.an('object').that.has.property('nome');
+                    done();
+                })
+            })
+        })  
+
+        it('should return a 404 error by token and invalid id' , done =>{
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                "email": "1234@email.com",
+                "senha": "teste",
+            })
+            .expect(200)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                } 
+                request(app)
+                .get('/api/user/id/5cc26836e78c2f0004cbde5a')
+                .set('authorization', `Bearer ${res.body.token}`)
+                .expect(404)
+                .end((err, res) => {
+                    if(err) {
+                        done(err);
+                        throw err;
+                    }  
+                        res.body.should.to.be.an('object').that.has.property('mensagem');
+                    done();
+                })
+            })
+        })  
+
+        it('should return error by error id from path' , done =>{
+            request(app)
+            .post('/api/auth/sign-in')
+            .send({
+                "email": "1234@email.com",
+                "senha": "teste",
+            })
+            .expect(200)
+            .end((err, res) => {
+                if(err) {
+                    done(err);
+                    throw err;
+                } 
+                request(app)
+                .get('/api/user/id/5cc26836e78c2fbde5a')
+                .set('authorization', `Bearer ${res.body.token}`)
+                .expect(500)
+                .end((err, res) => {
+                    if(err) {
+                        done(err);
+                        throw err;
+                    }  
+                        res.body.should.to.be.an('object').that.has.property('mensagem');
+                    done();
+                })
+            })
+        })  
+
+        it('should return a user with token of removed user' , done =>{
+              request(app)
+                .get('/api/user/id/5cc26836e78c2f0004cbde5b')
+                .set('authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYzI1ZGM2MTI3NDU0NmNlNDM2NTRkZiIsImlhdCI6MTU1NjI4NzYyNywiZXhwIjoxNTU2MzMwODI3fQ.OxqMwman0jRYZEN5rAqL7kwyqX6rj0LkqHkv3WvFEh4`)
+                .expect(404)
+                .end((err, res) => {
+                    if(err) {
+                        done(err);
+                        throw err;
+                    }  
+                        res.body.should.to.be.an('object').that.has.property('mensagem');
+                    done();
+                })
+            })
+    });
+}); 

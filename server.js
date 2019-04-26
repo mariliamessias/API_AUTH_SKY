@@ -17,7 +17,7 @@ router.use(verifyToken, function(req, res, next){
 });
 
 router.get('/', function(req, res){
-    res.json({message: 'Conectado'});
+    res.json({mensagem: 'Conectado'});
 });
 
 router.use(users);

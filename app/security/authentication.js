@@ -4,7 +4,6 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../../config');
-var verifyToken = require('../security/verifyToken');
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(bodyParser.json());
 var User = require ('../models/user');
@@ -41,14 +40,7 @@ router.post('/sign-up', function(req, res){
     });
 })
 
-router.get('/validaToken', verifyToken, function(req, res){
-        User.findById(req.userId, {password: 0}, function(err, user){
-            if(err) return res.status(500).send({mensagem:'Ocorreu um erro inesperado no servidor'});
-            if (!user) return res.status(404).send({mensagem:'Usuário e/ou senha inválidos'});
 
-            res.status(200).send(user);
-        })
-    })
 
 router.post('/sign-in', function(req, res) {
   User.findOne({ email: req.body.email }, function (err, user) {

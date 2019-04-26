@@ -5,7 +5,8 @@ var router = express.Router();
 router.route('/user/id/:id')
     .get(function(req, res){
         var id = req.params.id;
-        User.findById(id, function(error, user){
+        var idUser = req.userId;
+        User.findById(idUser, function(error, user){
             if(error){
                 res.status(500).send({mensagem:'usuario nao localizado'});
             }
@@ -18,13 +19,27 @@ router.route('/user/id/:id')
                     var diffMins = Math.round(result / 60000); // minutes
 
                     if(diffMins < 30){
-                        res.json(user);
-                    }else {
-                        res.status(400).json({ mensagem:'sessão inválida!'});
+                        User.findById(id, function(err, user){
+                            if(err){
+                                res.status(500).send({mensagem:'ocorreu um erro inesperado no servidor'});
+                            }
+                            else{
+                                if(user){
+                                    res.json(user);
+                                }
+                                else{
+                                    res.status(404).json({ mensagem:'usuario não localizado' });
+                                }
+                            }
+
+                        })
+                    }
+                    else {
+                        res.status(400).json({ mensagem:'sessão inválida'});
                     }
                 }
                 else{
-                    res.status(404).json({ mensagem:'usuario não encontrado!' });
+                    res.status(404).json({ mensagem:'usuario não localizado' });
                 }
             }
         });
