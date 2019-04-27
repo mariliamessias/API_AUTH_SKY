@@ -16,8 +16,11 @@ function verifyToken(req, res, next) {
 
   if (token.startsWith('Bearer ')) token = token.slice(7, token.length);
   jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) { return res.status(403).send({ mensagem: 'Não autorizado' }); }
-
+    if (err) {
+      if (err.message === 'jwt expired') return res.status(403).send({ mensagem: 'Sessão inválida' }); 
+      return res.status(403).send({ mensagem: 'Não autorizado' }); 
+    }
+    
     User.findOne({ _id: decoded.id }, (erro, user) => {
       if (user && user.token === token) {
         req.userId = decoded.id;
