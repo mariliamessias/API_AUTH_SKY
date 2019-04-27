@@ -259,9 +259,7 @@ describe('Authentication API', () => {
         .get('/api/user/id/5cc26836e78c2f0004cbde5b')
         .set(
           'authorization',
-          `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-        .eyJpZCI6IjVjYzI1ZGM2MTI3NDU0NmNlNDM2NTRkZiIsImlhdCI6MTU1NjI4NzYyNywiZXhwIjoxNTU2MzMwODI3fQ
-        .OxqMwman0jRYZEN5rAqL7kwyqX6rj0LkqHkv3WvFEh4`
+          `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYzI1ZGM2MTI3NDU0NmNlNDM2NTRkZiIsImlhdCI6MTU1NjI4NzYyNywiZXhwIjoxNTU2MzMwODI3fQ.OxqMwman0jRYZEN5rAqL7kwyqX6rj0LkqHkv3WvFEh4` // eslint-disable-line
         )
         .expect(403)
         .end((err, res) => {

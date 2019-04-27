@@ -13,7 +13,7 @@ router.use(bodyParser.json());
 const User = require('../models/user');
 
 router.post('/sign-up', (req, res) => {
-    User.findOne({ email: req.body.email }, (err, user) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
     try{
       if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
       if (!user) {
@@ -52,40 +52,40 @@ router.post('/sign-up', (req, res) => {
 
 router.post('/sign-in', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
-  try{
-    if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
-    if (!user) return res.status(404).send({ mensagem: 'Usuário e/ou senha inválidos' });
+    try{
+      if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
+      if (!user) return res.status(404).send({ mensagem: 'Usuário e/ou senha inválidos' });
 
-    const passwordIsValid = bcrypt.compareSync(req.body.senha, user.senha);
+      const passwordIsValid = bcrypt.compareSync(req.body.senha, user.senha);
 
-    if (!passwordIsValid) return res.status(401).send({ mensagem: 'Usuário e/ou senha inválidos' });
-    // eslint-disable-next-line no-underscore-dangle
-    const token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: config.expiresIn,
-    });
+      if (!passwordIsValid) return res.status(401).send({ mensagem: 'Usuário e/ou senha inválidos' });
+      // eslint-disable-next-line no-underscore-dangle
+      const token = jwt.sign({ id: user._id }, config.secret, {
+        expiresIn: config.expiresIn,
+      });
 
-    User.update({ _id: user.id }, {
-      $set: {
-        loginDate: new Date(),
-        token: token,
-      },
-    }, (error) => {
-      if (error) {
-        res.status(500).send({ mensagem: `Erro ao tentar atualizar o usuario!${error}` });
-      } else {
-        res.status(200).send({
-          id: user.id,
-          data_criacao: user.createAt,
-          data_atualizacao: user.updateAt,
-          ultimo_login: user.loginDate,
+      User.update({ _id: user.id }, {
+        $set: {
+          loginDate: new Date(),
           token: token,
-        });
-      }
-    });
-  }
-  catch(error){
-    res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor'}); 
-  }
+        },
+      }, (error) => {
+        if (error) {
+          res.status(500).send({ mensagem: `Erro ao tentar atualizar o usuario!${error}` });
+        } else {
+          res.status(200).send({
+            id: user.id,
+            data_criacao: user.createAt,
+            data_atualizacao: user.updateAt,
+            ultimo_login: user.loginDate,
+            token: token,
+          });
+        }
+      });
+    }
+    catch(error){
+      res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor'}); 
+    }
   });
 });
 

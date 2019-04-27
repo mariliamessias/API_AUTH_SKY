@@ -9,7 +9,7 @@ const naoValidarToken = function (req) {
 };
 function verifyToken(req, res, next) {
 
-  if (naoValidarToken(req)) { console.log(req.originalUrl); return next(); }
+  if (naoValidarToken(req)) { return next(); }
 
   let token = req.headers.authorization;
   if (!token) { return res.status(403).send({ mensagem: 'Não autorizado' }); }

@@ -7,7 +7,7 @@ module.exports = {
       impliedStrict: false
     }
   },
-  extends: ['eslint:recommended', 'airbnb-base'],
+  // extends: ['eslint:recommended', 'airbnb-base'],
   env: {
     'node': true,
     'mocha': true
