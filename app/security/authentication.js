@@ -13,40 +13,46 @@ router.use(bodyParser.json());
 const User = require('../models/user');
 
 router.post('/sign-up', (req, res) => {
-  User.findOne({ email: req.body.email }, (err, user) => {
-    if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
-    if (!user) {
-      const psw = bcrypt.hashSync(req.body.senha, 10);
-      // eslint-disable-next-line no-underscore-dangle
-      const token = jwt.sign({ id: User._id }, config.secret, {
-        expiresIn: config.expiresIn,
-      });
-
-      const newUser = new User({
-        nome: req.body.nome,
-        email: req.body.email,
-        senha: psw,
-        telefones: req.body.telefones,
-        token: token,
-      });
-
-      newUser.save((error) => {
-        if (error) return res.status(500).send({ mensagem: 'Erro ao cadastrar usuário' });
-      });
-      return res.status(200).send({
-        id: newUser.id,
-        data_criacao: newUser.createAt,
-        data_atualizacao: newUser.updateAt,
-        ultimo_login: newUser.loginDate,
-        token: token,
-      });
+    User.findOne({ email: req.body.email }, (err, user) => {
+    try{
+      if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
+      if (!user) {
+        const psw = bcrypt.hashSync(req.body.senha, 10);
+        // eslint-disable-next-line no-underscore-dangle
+        const token = jwt.sign({ id: User._id }, config.secret, {
+          expiresIn: config.expiresIn,
+        });
+  
+        const newUser = new User({
+          nome: req.body.nome,
+          email: req.body.email,
+          senha: psw,
+          telefones: req.body.telefones,
+          token: token,
+        });
+  
+        newUser.save((error) => {
+          if (error) return res.status(500).send({ mensagem: 'Erro ao cadastrar usuário' });
+        });
+        return res.status(200).send({
+          id: newUser.id,
+          data_criacao: newUser.createAt,
+          data_atualizacao: newUser.updateAt,
+          ultimo_login: newUser.loginDate,
+          token: token,
+        });
+      }
+      res.status(400).send({ mensagem: 'E-mail já existente' });
     }
-    res.status(400).send({ mensagem: 'E-mail já existente' });
+    catch(error){
+      res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor'}); 
+    }
   });
 });
 
 router.post('/sign-in', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
+  try{
     if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
     if (!user) return res.status(404).send({ mensagem: 'Usuário e/ou senha inválidos' });
 
@@ -76,6 +82,10 @@ router.post('/sign-in', (req, res) => {
         });
       }
     });
+  }
+  catch(error){
+    res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor'}); 
+  }
   });
 });
 
