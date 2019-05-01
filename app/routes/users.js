@@ -7,6 +7,11 @@ const router = express.Router();
 
 router.route('/user/id/:id')
   .get((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+
     const { id } = req.params;
     const idUser = req.userId;
     User.findById(idUser, (error, user) => {

@@ -13,6 +13,11 @@ router.use(bodyParser.json());
 const User = require('../models/user');
 
 router.post('/sign-up', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+  res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+
   User.findOne({ email: req.body.email }, (err, user) => {
     try{
       if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
@@ -51,6 +56,11 @@ router.post('/sign-up', (req, res) => {
 });
 
 router.post('/sign-in', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+  res.setHeader('Access-Control-Allow-Credentials', true); // If needed
+
   User.findOne({ email: req.body.email }, (err, user) => {
     try{
       if (err) return res.status(500).send({ mensagem: 'Ocorreu um erro inesperado no servidor.' });
