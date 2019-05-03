@@ -8,6 +8,10 @@ const mongoose = require('mongoose');
 const authentication = require('./app/security/authentication');
 const verifyToken = require('./app/security/verifyToken');
 const users = require('./app/routes/users');
+var cors = require('cors')
+
+app.options('*', cors()); // include before other routes
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
