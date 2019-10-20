@@ -86,9 +86,11 @@ router.post('/sign-in', (req, res) => {
         } else {
           res.status(200).send({
             id: user.id,
+            nome: user.nome,
             data_criacao: user.createAt,
             data_atualizacao: user.updateAt,
             ultimo_login: user.loginDate,
+            profilePicture: user.imagem,
             token: token,
           });
         }
